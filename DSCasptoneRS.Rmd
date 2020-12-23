@@ -1,0 +1,187 @@
+---
+title: "DSCapstone"
+author: "RS"
+date: "15 11 2020"
+output: html_document
+---
+## Install needed packages
+```{r warning=FALSE}
+## for text mining
+library(tm) 
+## word-cloud generator 
+library(wordcloud)
+## Tokenization
+library(ngram)
+## for text stemming
+library("SnowballC")
+## color palettes
+library("RColorBrewer")
+```
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+## Importing the data
+```{r warning=FALSE}
+#Load 10000 lines for further processing as the full files would be too time consuming to calculate
+setwd("C:/Users/Ronnz/Documents/datasciencecoursera/Capstone")
+
+myCon <- file("de_DE.twitter.txt", encoding = 'UTF-8')
+myTwitter <- readLines(myCon)
+
+##myTwitter <- readLines("de_DE.twitter.txt", encoding = 'UTF-8')
+myTwitterSample <- readLines("de_DE.twitter.txt", 10000, encoding = 'UTF-8')
+
+##myNews <- readLines("de_DE.news.txt", encoding = 'UTF-8')
+myCon2 <- file("de_DE.news.txt", encoding = 'UTF-8')
+myNews <- readLines(myCon2)
+myNewsSample <- readLines("de_DE.news.txt", 10000, encoding = 'UTF-8')
+
+##myBlog <- readLines("de_DE.blogs.txt", encoding = 'UTF-8')
+myCon3 <- file("de_DE.blogs.txt", encoding = 'UTF-8')
+myBlog <- readLines(myCon3)
+myBlogSample <- readLines("de_DE.blogs.txt", 10000, encoding = 'UTF-8')
+
+## Load the data as a corpus
+myTwitterCorpus <- Corpus(VectorSource(myTwitterSample))
+myNewsCorpus <- Corpus(VectorSource(myNewsSample))
+myBlogCorpus <- Corpus(VectorSource(myBlogSample))
+```
+
+## Show summary of Twitter file: lines and wordcount and basic tables
+```{r}
+summary(myTwitter)
+str(myTwitter)
+wordcount(myTwitter)
+close(myCon)
+```
+## Data cleaning and preprocessing of Twitter file
+```{r echo=FALSE}
+# Convert the text to lower case
+myTwitterCorpus <- tm_map(myTwitterCorpus, content_transformer(tolower))
+# Remove numbers
+myTwitterCorpus <- tm_map(myTwitterCorpus, removeNumbers)
+# Remove german common stopwords
+myTwitterCorpus <- tm_map(myTwitterCorpus, removeWords, stopwords("german"))
+# Remove punctuations
+myTwitterCorpus <- tm_map(myTwitterCorpus, removePunctuation)
+# Eliminate extra white spaces
+myTwitterCorpus <- tm_map(myTwitterCorpus, stripWhitespace)
+# Text stemming
+myTwitterCorpus <- tm_map(myTwitterCorpus, stemDocument)
+```
+
+## Build a term-document matrix of Twitter file
+```{r}
+dtm <- TermDocumentMatrix(myTwitterCorpus)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+head(d, 10)
+```
+
+## Wordcloud of Twitter File
+```{r}
+wordcloud(myTwitterSample, max.words=50, random.order=TRUE, rot.per=.15, colors=colorRampPalette(brewer.pal(9,"Blues"))(32), scale=c(3, .3))
+```
+## Display a barchart of the top 10 of the most used words of Twitter file
+
+```{r echo=FALSE}
+
+barplot(d[1:10,]$freq, las = 2, names.arg = d[1:10,]$word,
+        col ="lightblue", main ="Most frequent words of Twitter File",
+        ylab = "Word frequencies")
+```
+## Show summary of News file: lines and wordcount and basic tables
+```{r}
+summary(myNews)
+str(myNews)
+wordcount(myNews)
+close(myCon2)
+```
+## Data cleaning and preprocessing of News file
+```{r echo=FALSE}
+# Convert the text to lower case
+myNewsCorpus <- tm_map(myNewsCorpus, content_transformer(tolower))
+# Remove numbers
+myNewsCorpus <- tm_map(myNewsCorpus, removeNumbers)
+# Remove german common stopwords
+myNewsCorpus <- tm_map(myNewsCorpus, removeWords, stopwords("german"))
+# Remove punctuations
+myNewsCorpus <- tm_map(myNewsCorpus, removePunctuation)
+# Eliminate extra white spaces
+myNewsCorpus <- tm_map(myNewsCorpus, stripWhitespace)
+# Text stemming
+myNewsCorpus <- tm_map(myNewsCorpus, stemDocument)
+```
+
+## Build a term-document matrix of News file
+```{r}
+dtm <- TermDocumentMatrix(myNewsCorpus)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+head(d, 10)
+```
+
+## Wordcloud of News File
+```{r}
+wordcloud(myNewsSample, max.words=50, random.order=TRUE, rot.per=.15, colors=colorRampPalette(brewer.pal(9,"Blues"))(32), scale=c(3, .3))
+```
+## Display a barchart of the top 10 of the most used words of News file
+
+```{r echo=FALSE}
+
+barplot(d[1:10,]$freq, las = 2, names.arg = d[1:10,]$word,
+        col ="lightblue", main ="Most frequent words of News file",
+        ylab = "Word frequencies")
+```
+## Show summary of Blog file: lines and wordcount and basic tables
+```{r}
+summary(myBlog)
+str(myBlog)
+wordcount(myBlog)
+close(myCon3)
+```
+
+## Data cleaning and preprocessing of Blog file
+```{r echo=FALSE}
+# Convert the text to lower case
+myBlogCorpus <- tm_map(myBlogCorpus, content_transformer(tolower))
+# Remove numbers
+myBlogCorpus <- tm_map(myBlogCorpus, removeNumbers)
+# Remove german common stopwords
+myBlogCorpus <- tm_map(myBlogCorpus, removeWords, stopwords("german"))
+# Remove punctuations
+myBlogCorpus <- tm_map(myBlogCorpus, removePunctuation)
+# Eliminate extra white spaces
+myBlogCorpus <- tm_map(myBlogCorpus, stripWhitespace)
+# Text stemming
+myBlogCorpus <- tm_map(myBlogCorpus, stemDocument)
+```
+
+## Build a term-document matrix of Blog file
+```{r}
+dtm <- TermDocumentMatrix(myBlogCorpus)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+head(d, 10)
+```
+
+## Wordcloud of Blog File
+```{r}
+wordcloud(myBlogSample, max.words=50, random.order=TRUE, rot.per=.15, colors=colorRampPalette(brewer.pal(9,"Blues"))(32), scale=c(3, .3))
+```
+
+## Display a barchart of the top 10 of the most used words of Blog file
+
+```{r echo=FALSE}
+
+barplot(d[1:10,]$freq, las = 2, names.arg = d[1:10,]$word,
+        col ="lightblue", main ="Most frequent words of blog file",
+        ylab = "Word frequencies")
+```

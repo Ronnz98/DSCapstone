@@ -1,0 +1,56 @@
+Coursera Capstone Data Science Spezialization
+========================================================
+author: Ronald Severin
+date:  23-DEC-2020
+autosize: true
+
+Introduction
+========================================================
+
+- Objective: create a product to highlight the prediction algorithm and to provide an interface that can be accessed by others using Shiny
+- Source: German twitter file provided by Coursera
+- 1-Understanding the problem, getting and cleaning the data<br>
+2-Exploratory Data Analysis <br>
+3-Tokenisation of words and predictive text mining<br>
+4-Writing a milestone project and a prediction model<br>
+5-Developing a shiny application and presentation with pitch<br>
+
+Methods
+========================================================
+
+- Twitter data was loaded (German twitter text), a sample of the whole data was taken and cleaned. Cleaning included removing links, whitespaces and special characters etc.
+
+- Sampled data was tokenized then to n-grams to create the predictive models Tokenization is the process of breaking a stream of text up into words and phrases. 
+
+- The n-grams files (unigram, bigram, trigram, quadgram and quintgram) are matrices with frequencies of words used into the algorithm to predict the next word based on the text entered.
+
+Shiny App
+========================================================
+
+
+
+- The Shiny application predictios the next possible word of a sentence
+
+- User enters text in an input field and in the output field the app shows the word that will be most likely
+
+- Predicted word is returned from the n-grams matrices, comparing it with tokenized frequency of 2, 3, 4 and grams sequences
+
+- During entering the text the field with the predicted next word is shown immediately
+
+
+
+Shiny App UI
+========================================================
+
+- Screenshot of the user interface (UI) depict:
+
+<img src="DSCapstoneRS.JPG";>
+
+Roundup
+========================================================
+
+- More accurate if sample size is increased
+
+- Github link: https://github.com/Ronnz98/DSCapstone
+
+
